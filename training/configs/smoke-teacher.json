@@ -1,0 +1,20 @@
+{
+  "stage": "teacher",
+  "description": "Plumbing test on stand-in pairs (CREMA-D women through the classic pipeline). Says nothing about any look.",
+  "data": {
+    "size": 256,
+    "train_sequences": ["cremad-*"],
+    "heldout_sequences": ["cremad-1060-*", "cremad-1072-*", "cremad-1082-*"]
+  },
+  "model": {"base": 16, "depth": 4, "blocks": 2, "residual": true, "norm": "instance", "attention": true},
+  "train": {
+    "steps": 1500,
+    "batch_size": 4,
+    "learning_rate": 0.001,
+    "num_workers": 3,
+    "checkpoint_every": 250,
+    "validate_every": 500,
+    "validate_frames": 6,
+    "log_every": 50
+  }
+}

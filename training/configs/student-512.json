@@ -1,0 +1,31 @@
+{
+  "stage": "student",
+  "description": "Starting point for the student the runtime targets: 8.6 MB plain U-Net at 512 (contract 7.3). Not run on real data yet. Step counts are estimates.",
+  "data": {
+    "size": 512,
+    "train_sequences": ["*"],
+    "heldout_sequences": []
+  },
+  "model": {"base": 32, "depth": 3, "blocks": 1, "norm": "instance", "float16": true},
+  "loss": {"distill": 1.0},
+  "train": {
+    "steps": 100000,
+    "batch_size": 8,
+    "learning_rate": 0.0005,
+    "warmup_steps": 500,
+    "ema_decay": 0.9995,
+    "amp": true,
+    "num_workers": 8,
+    "checkpoint_every": 2000,
+    "keep_checkpoints": 3,
+    "validate_every": 5000,
+    "validate_frames": 12,
+    "log_every": 200
+  },
+  "export": {
+    "name": "finish-student",
+    "version": "0.1.0",
+    "max_abs_delta": 0.25,
+    "temporal_alpha": 0.6
+  }
+}

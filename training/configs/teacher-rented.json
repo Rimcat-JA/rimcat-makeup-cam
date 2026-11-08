@@ -1,0 +1,24 @@
+{
+  "stage": "teacher",
+  "description": "Starting point for a teacher on a rented GPU, real pairs. Not run yet: no real data exists. Sizes and step counts are estimates.",
+  "data": {
+    "size": 512,
+    "train_sequences": ["*"],
+    "heldout_sequences": []
+  },
+  "model": {"base": 32, "depth": 5, "blocks": 2, "residual": true, "norm": "instance", "attention": true},
+  "train": {
+    "steps": 100000,
+    "batch_size": 4,
+    "learning_rate": 0.0002,
+    "warmup_steps": 1000,
+    "ema_decay": 0.9995,
+    "amp": true,
+    "num_workers": 8,
+    "checkpoint_every": 2000,
+    "keep_checkpoints": 3,
+    "validate_every": 5000,
+    "validate_frames": 12,
+    "log_every": 200
+  }
+}

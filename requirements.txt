@@ -1,0 +1,10 @@
+# Python 3.10 - 3.12 recommended (MediaPipe wheels).
+mediapipe>=0.10.14
+# The OpenCV build MediaPipe itself depends on. A second OpenCV package (e.g.
+# opencv-python-headless) would install into the same cv2 folder and conflict.
+opencv-contrib-python>=4.8
+numpy>=1.24
+PySide6>=6.5
+# Pinned: if the sender dies while a call app holds the camera, the app writes into OBS's queue directly, and that layout
+# is checked against this version (tests/test_parallel_obs.py). Run that test after any update of this package or of OBS.
+pyvirtualcam==0.15.0

@@ -1,0 +1,15 @@
+# Python caches, local environments, test media and model weights.
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.test-media/
+.venv-neural/
+.venv-train/
+# Weights never belong here, wherever a tool was told to write them.
+*.onnx
+*.pt
+*.pth
+*.safetensors

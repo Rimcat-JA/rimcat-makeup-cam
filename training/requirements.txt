@@ -1,0 +1,15 @@
+# Training and export tools (docs/dev/contract-plan-b.md). Own environment, never the app's:
+#   py -3.12 -m venv .venv-train
+#   .venv-train\Scripts\python -m pip install -r training/requirements.txt
+# This is the CPU build, for local work and tests. A rented NVIDIA machine replaces it with the CUDA build of the same
+# torch version from the PyTorch index.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.15.0
+torchvision==0.29.2
+onnx==1.23.2
+onnxscript==0.7.2
+# Only to check an export on the CPU. DirectML runs in .venv-neural.
+onnxruntime==1.31.1
+numpy>=2
+opencv-python-headless>=4.8
+pytest>=7
