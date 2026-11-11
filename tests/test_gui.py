@@ -22,13 +22,14 @@ import cv2
 import numpy as np
 import pytest
 import shiboken6 as Shiboken
+from makeup_cam import gui  # Initialize the application's Qt dependencies first.
 from PySide6.QtCore import QByteArray, QPoint, QPointF, Qt
 from PySide6.QtGui import QColor, QWheelEvent
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QAbstractButton, QApplication, QCheckBox, QMainWindow, QPushButton
 
 from makeup_cam import background as plates
-from makeup_cam import camera, config, gui
+from makeup_cam import camera, config
 from makeup_cam.analyze import AnalysisError, AnalysisResult
 from makeup_cam.config import SECTION_LABELS, SECTIONS, MakeupSettings
 from makeup_cam.gui import (
@@ -1886,8 +1887,8 @@ def test_a_real_analysis_of_an_unreadable_file_is_reported_in_japanese(
 
 _RUN_AND_CLOSE = """
 import os, sys
-from PySide6.QtCore import QTimer
 from makeup_cam import gui, pipeline
+from PySide6.QtCore import QTimer
 
 class Pipeline:
     bypass = False

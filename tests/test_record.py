@@ -24,11 +24,11 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 import cv2
 import numpy as np
 import pytest
+from makeup_cam import record  # Initialize the application's Qt dependencies first.
 from PySide6.QtCore import QRect, Qt, QTimer
 from PySide6.QtWidgets import QApplication
 
 from makeup_cam import camera as camera_module
-from makeup_cam import record
 from makeup_cam.camera import CameraError
 from makeup_cam.record import (
     CONDITIONS,
@@ -2280,9 +2280,9 @@ def test_main_runs_the_window_until_it_is_closed(qapp: QApplication, tmp_path: P
 
 _CLOSE_AT_ONCE = """
 import sys
+from makeup_cam import record
 from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QApplication
-from makeup_cam import record
 original = record.RecorderWindow.__init__
 def init(self, *args, **kwargs):
     original(self, *args, **kwargs)

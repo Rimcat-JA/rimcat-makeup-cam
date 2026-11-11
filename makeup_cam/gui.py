@@ -34,6 +34,8 @@ from functools import partial
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, ClassVar, Protocol
 
+from . import _qt_compat  # noqa: F401  # Initialize Windows DLLs before PySide6.
+
 import numpy as np
 from PySide6.QtCore import (
     QByteArray,

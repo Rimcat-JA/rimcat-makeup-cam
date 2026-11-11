@@ -65,6 +65,8 @@ from itertools import pairwise
 from pathlib import Path
 from typing import Any, Protocol, TypeVar
 
+from . import _qt_compat  # noqa: F401  # Initialize Windows DLLs before PySide6.
+
 import cv2
 import numpy as np
 from PySide6.QtCore import QEvent, QRectF, QStandardPaths, Qt, QTimer

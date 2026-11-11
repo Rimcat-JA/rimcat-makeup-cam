@@ -5,6 +5,7 @@ from __future__ import annotations
 import io
 import json
 import os
+import shutil
 import signal
 import subprocess
 import sys
@@ -32,6 +33,64 @@ def isolated_home(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """Keep the user's own presets, session and devices out of these tests."""
     monkeypatch.setenv("AI_MAKEUP_CAM_HOME", str(tmp_path / "home"))
     monkeypatch.setattr(camera, "_device_names", dict)
+
+
+# ---- Windows Qt startup -----------------------------------------------------
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="The DLL search-path collision is specific to Windows")
+@pytest.mark.parametrize("module_name", ["makeup_cam.gui", "makeup_cam.record"])
+def test_windows_qt_startup_with_conflicting_icu_dll(tmp_path: Path, module_name: str) -> None:
+    """Start each Qt window module with an incompatible ICU DLL on its search path.
+
+    A copied system DLL stands in for a conflicting ICU DLL. A fresh process imports
+    the real CLI and window module, then creates an offscreen widget without a camera.
+
+    :param tmp_path: Path; temporary directory for the conflicting DLL.
+    :param module_name: str; fully qualified window module to import.
+    return None: None; the assertions report import or widget initialization failures.
+    """
+    system_dir = Path(os.environ["SystemRoot"]) / "System32"
+    shutil.copyfile(system_dir / "version.dll", tmp_path / "icuuc.dll")
+    env = os.environ.copy()
+    env["QT_QPA_PLATFORM"] = "offscreen"
+    script = """
+import importlib, os, sys
+conflicting_dir = os.add_dll_directory(sys.argv[1])
+import makeup_cam.__main__
+importlib.import_module(sys.argv[2])
+from PySide6.QtWidgets import QApplication, QWidget
+app = QApplication([])
+widget = QWidget()
+print("QT_STARTUP_OK")
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", script, str(tmp_path), module_name],
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "QT_STARTUP_OK" in result.stdout
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="The ICU preload is specific to Windows")
+def test_windows_qt_initialization_tolerates_missing_system_icu() -> None:
+    """Import the Qt compatibility module when the system ICU preload fails.
+
+    The subprocess simulates an unavailable system DLL without affecting the
+    installed libraries. Older Qt versions can then continue their normal import.
+
+    return None: None; the assertion reports an unexpected compatibility import failure.
+    """
+    script = """
+from unittest.mock import patch
+with patch('ctypes.WinDLL', side_effect=OSError('system ICU unavailable')):
+    import makeup_cam._qt_compat
+"""
+    result = subprocess.run([sys.executable, "-c", script], capture_output=True, text=True, timeout=30)
+    assert result.returncode == 0, result.stderr
 
 
 # ---- argument parsing --------------------------------------------------------

@@ -763,8 +763,8 @@ sys.exit(main(sys.argv[1:]))
 _GUI_CLOSES_ITSELF = r"""
 import argparse, json, sys, time
 from pathlib import Path
-from PySide6.QtCore import QTimer
 from makeup_cam import gui
+from PySide6.QtCore import QTimer
 from makeup_cam.parallel import engine as engine_module
 import makeup_cam.pipeline as pipeline_module
 
